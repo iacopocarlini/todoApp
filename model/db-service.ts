@@ -4,6 +4,7 @@ import { enablePromise, openDatabase, SQLiteDatabase } from 'react-native-sqlite
 import { TodoModel } from '../model/todoModel';
 
 const tableName = 'todoData';
+const priorities: String[]  = ['A', 'B', 'C', 'D'];
 
 enablePromise(true);
 
@@ -14,7 +15,7 @@ export const getDBConnection = async () => {
 export const createTable = async (db: SQLiteDatabase) => {
   const query = `CREATE TABLE IF NOT EXISTS ${tableName}(
         title TEXT NOT NULL,
-        priority TEXT
+        priority TEXT DEFAULT '${priorities.pop()}'
     );`;
 
   await db.executeSql(query);
@@ -23,17 +24,18 @@ export const createTable = async (db: SQLiteDatabase) => {
 export const getTodoItems = async (db: SQLiteDatabase): Promise<TodoModel[]> => {
   try {
     const todoItems: TodoModel[] = [];
-    const results = await db.executeSql(`SELECT rowid as id, title FROM ${tableName}`);
+    const results = await db.executeSql(`SELECT rowid as id, title, priority FROM ${tableName}`);
     results.forEach(result => {
+      console.log('Read from DB: select command');
       for (let index = 0; index < result.rows.length; index++) {
         todoItems.push(result.rows.item(index));
-        console.log(result);
+        console.log(result.rows.item(index));
       }
     });
     return todoItems;
   } catch (error) {
     console.error(error);
-    throw Error('Failed to get todoItems !!!');
+    throw Error('Select Failed');
   }
 };
 

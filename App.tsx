@@ -85,40 +85,55 @@ const App = () => {
       
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic">
-        <View style={[styles.appTitleView]}>
+      <View style={styles.appTitleView}>
           <Text style={styles.appTitleText}> ToDo </Text>
         </View>
 
-        {/* Todo List*/}
-        <View style={styles.tasksWrapper}>
-          {todos.map((todo) => (
-            <TodoComponent key={todo.id} todo={todo} deleteItem={deleteItem} />
-          ))}
-        </View>
+      <View style={styles.mainContainer}>
+        
+        <ScrollView
+          style={styles.scrollView}
+          keyboardShouldPersistTaps='handled'
+          contentContainerStyle={styles.contentContainer}>
+
+          {/* Todo List*/}
+          <View style={styles.tasksWrapper}>
+            {todos.map((todo) => (
+              <TodoComponent key={todo.id} todo={todo} deleteItem={deleteItem} />
+            ))}
+          </View>
 
         </ScrollView>
+           
+      {/* Write a task */}
+      {/* Uses a keyboard avoiding view which ensures the keyboard does not cover the items on screen */}
+      <KeyboardAvoidingView 
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.writeTaskWrapper}>
 
-         {/* Write a task */}
-        {/* Uses a keyboard avoiding view which ensures the keyboard does not cover the items on screen */}
-        <KeyboardAvoidingView 
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={styles.writeTaskWrapper}
-        >
-          <TextInput style={styles.input} placeholder={'Write a task'} value={newTodo} onChangeText={text => setNewTodo(text)} />
-          <TouchableOpacity onPress={addTodo}>
-            <View style={styles.addWrapper}>
-              <Text style={styles.addText}>+</Text>
-            </View>
-          </TouchableOpacity>
-        </KeyboardAvoidingView>
+        <TextInput style={styles.input} placeholder={'Write a task'} value={newTodo} onChangeText={text => setNewTodo(text)} />
+        <TouchableOpacity onPress={addTodo}>
+          <View style={styles.addWrapper}>
+            <Text style={styles.addText}>+</Text>
+          </View>
+        </TouchableOpacity>
+        
+      </KeyboardAvoidingView>
+      </View> 
       
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+
+  container: {
+    flex:1,
+  },
+  mainContainer: {
+    flex:1,
+    flexDirection: "column"
+  },
   appTitleView: {
     marginTop: 20,
     justifyContent: 'center',
@@ -128,16 +143,18 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '800'
   },
-  container: {
-    flex: 1,
+  scrollView: {
+    flex: 1
+  },
+  contentContainer: {
+    flexGrow: 1
   },
   tasksWrapper: {
-    paddingTop: 40,
+    paddingTop: 20,
     paddingHorizontal: 20,
   },
   writeTaskWrapper: {
-    position: 'absolute',
-    bottom: 60,
+    flex: 0.2,
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -146,6 +163,8 @@ const styles = StyleSheet.create({
   input: {
     paddingVertical: 15,
     paddingHorizontal: 15,
+    fontSize: 15,
+    //textAlign: 'center',
     backgroundColor: '#FFF',
     borderRadius: 60,
     borderColor: '#C0C0C0',
@@ -162,7 +181,9 @@ const styles = StyleSheet.create({
     borderColor: '#C0C0C0',
     borderWidth: 1,
   },
-  addText: {},
+  addText: {
+    fontSize: 20
+  },
 });
 
 export default App;
