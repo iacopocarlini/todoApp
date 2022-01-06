@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {TodoModel} from '../model/todoModel';
+import { IconButton, Colors } from 'react-native-paper';
 
 export const TodoComponent: React.FC<{
   todo: TodoModel;
@@ -8,15 +9,20 @@ export const TodoComponent: React.FC<{
 }> = ({todo: {id, title, priority}, deleteItem}) => {
   return (
     <View style={styles.item}>
+
+      {/* Left  */}
       <View style={styles.itemLeft}>
         <View style={styles.square} />
         <Text style={styles.itemText}> {title} </Text>
       </View>
-      <TouchableOpacity 
-        key={id}  
+
+      {/* Right  */}
+      <IconButton 
+        icon="delete"
+        //color={Colors.red500}
+        size={25}
         onPress={() => deleteItem(id)}
-        style={styles.circular}>
-      </TouchableOpacity>
+        />
     </View>
   );
 };
@@ -47,9 +53,9 @@ const styles = StyleSheet.create({
   itemText: {
     maxWidth: '80%',
   },
-  circular: {
-    width: 12,
-    height: 12,
+  deleteButton: {
+    width: 25,
+    height: 25,
     borderColor: '#55BCF6',
     borderWidth: 2,
     borderRadius: 5,
