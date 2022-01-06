@@ -1,7 +1,6 @@
-/* eslint-disable prettier/prettier */
 
 export type TodoModel = {
     id: number;
     title: string;
-    priority?: string;
+    priority?: string; // A: important ... D: extra (absolutely not important)
 };

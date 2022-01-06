@@ -1,26 +1,30 @@
 
 class LogManager {
 
-    logs: String[] = [];
     static instance: LogManager;
 
     public constructor() {
 
+      // Singleton pattern
       if (LogManager.instance == null) {
-        this.logs = [];
         LogManager.instance = this;
       }
       return LogManager.instance;
     }
   
     public log(logLevel: String, message:any) {
-      this.logs.push(message);
-      console.log(`${logLevel}: ${message}`);
+      
+      /* Log levels:
+        - INFO
+        - ERROR 
+        - OBJECT -> logs the content of a JS object  
+      */ 
+      if (logLevel != 'OBJECT')
+        console.log(`${logLevel}: ${message}`);
+      else
+        console.log(message);
     }
-  
-    /*public printLogCount() {
-      console.log(`${this.logs.length} Logs`);
-    }*/
+
   }
   
 const logger = new LogManager();
