@@ -17,8 +17,8 @@ export const createTable = async (db: SQLiteDatabase) => {
   const query = `CREATE TABLE IF NOT EXISTS ${tableName}(
                   id INTEGER PRIMARY KEY,   
                   title TEXT NOT NULL,
-                  priority TEXT DEFAULT '${priorities.pop()}'
-                  );`; // BUG SU POP
+                  priority TEXT DEFAULT '${priorities[priorities.length - 1]}'
+                  );`;
 
     logger.log('INFO', query);
 

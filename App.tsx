@@ -15,14 +15,28 @@ import {
 } from 'react-native';
 import { TodoComponent } from './components/todoComponent';
 import { TodoModel } from './model/todoModel';
-import { getDBConnection, getTodoItems, saveTodoItems, createTable, deleteTodoItem, deleteTable } from './model/db-service';
+import { getDBConnection, getTodoItems, saveTodoItems, createTable, deleteTodoItem } from './model/db-service';
 import logger from './utils/logger';
+import { IconButton, Colors } from 'react-native-paper';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 const App = () => {
+
+  // Theme
   const isDarkMode = useColorScheme() === 'dark';
 
+  // State variables
   const [todos, setTodos] = useState<TodoModel[]>([]);
   const [newTodo, setNewTodo] = useState('');
+  const [priority, setPriority] = useState('D');
+  const [priorityItems, setpriorityItems] = useState([
+    {label: '🔴', value: 'A'},
+    {label: '🟢', value: 'B'},
+    {label: '🔵', value: 'C'},
+    {label: '⚫', value: 'D'}
+  ]);
+  const [open, setOpen] = useState(false);
+
 
   const loadDataCallback = useCallback(async () => {
     
@@ -45,6 +59,30 @@ const App = () => {
     loadDataCallback();
   }, [loadDataCallback]);
 
+  // Sort function for todos
+  const compareTodo = (a: TodoModel, b: TodoModel) => {
+
+    if (a.priority < b.priority)
+      return -1;
+
+    if (a.priority == b.priority) {
+      
+      if (a.id < b.id)
+        return -1;
+
+      if (a.id == b.id)
+        return 0;
+
+      if (a.id > b.id)
+        return 1;
+    }
+
+    if (a.priority > b.priority)
+      return 1;
+
+    return 0;
+  }
+
   const addTodo = async () => {
 
     if (!newTodo.trim()) 
@@ -61,9 +99,13 @@ const App = () => {
           return acc;
         }).id+1 : 0, 
         title: newTodo,
-        priority: 'D'
+        priority: priority
       };
+
+      // Add item and sort on id & pririty
       const newTodos = [...todos, newElement];
+      newTodos.sort(compareTodo);
+
 
       setTodos(newTodos);
 
@@ -125,16 +167,40 @@ const App = () => {
       {/* Uses a keyboard avoiding view which ensures the keyboard does not cover the items on screen */}
       <KeyboardAvoidingView 
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.writeTaskWrapper}>
+        style={styles.keyboardAvoidingStyle}>
 
+        <View style={{ flex: 3, paddingHorizontal: 5}} >
         <TextInput style={styles.input} placeholder={'Write a task'} value={newTodo} onChangeText={text => setNewTodo(text)} />
-        <TouchableOpacity onPress={addTodo}>
-          <View style={styles.addWrapper}>
-            <Text style={styles.addText}>+</Text>
-          </View>
-        </TouchableOpacity>
+        </View>
+
+        <View style={{ flex: 1, paddingHorizontal: 5}} >
+
+          {/* ref: https://hossein-zare.github.io/react-native-dropdown-picker-website/docs/usage */}
+          <DropDownPicker
+            style={styles.priorityDropdown}
+            open={open}
+            value={priority}
+            items={priorityItems}
+            setOpen={setOpen}
+            setValue={setPriority}
+            setItems={setpriorityItems}
+            placeholder={priorityItems[0].label}
+            dropDownDirection="TOP"
+          />
+        </View>
+
+        <View style={{ flex: 1, paddingHorizontal: 5}} > 
+        <IconButton 
+            icon="plus"
+            style={styles.addButton}
+            color={Colors.grey600}
+            size={20}
+            onPress={addTodo}
+            />  
+        </View>      
+        </KeyboardAvoidingView>
         
-      </KeyboardAvoidingView>
+
       </View> 
       
     </SafeAreaView>
@@ -169,27 +235,30 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingHorizontal: 20,
   },
-  writeTaskWrapper: {
-    flex: 0.2,
+  keyboardAvoidingStyle: {
     width: '100%',
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center'
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: 50,
+    marginHorizontal: 20,
   },
   input: {
+    width: '100%',
     paddingVertical: 15,
     paddingHorizontal: 15,
     fontSize: 15,
-    //textAlign: 'center',
     backgroundColor: '#FFF',
-    borderRadius: 60,
+    borderRadius: 10,
     borderColor: '#C0C0C0',
     borderWidth: 1,
-    width: 250,
+  },
+  priorityDropdown: {
+    width: '100%',
+    borderColor: '#C0C0C0',
   },
   addWrapper: {
-    width: 60,
-    height: 60,
+    width: '100%',
     backgroundColor: '#FFF',
     borderRadius: 60,
     justifyContent: 'center',
@@ -197,8 +266,9 @@ const styles = StyleSheet.create({
     borderColor: '#C0C0C0',
     borderWidth: 1,
   },
-  addText: {
-    fontSize: 20
+  addButton: {
+    borderColor: '#C0C0C0',
+    borderWidth: 1,
   },
 });
 

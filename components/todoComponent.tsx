@@ -7,22 +7,48 @@ export const TodoComponent: React.FC<{
   todo: TodoModel;
   deleteItem: Function;
 }> = ({todo: {id, title, priority}, deleteItem}) => {
+
+
+  // Set style based on priority 
+  // TODO: Refactor
+  let priorityStyle; 
+  switch (priority) {
+
+    case 'A':
+      priorityStyle = styles.A;
+      break;
+    case 'B':
+      priorityStyle = styles.B;
+      break;
+    case 'C':
+      priorityStyle = styles.C;
+      break;
+    case 'D':
+      priorityStyle = styles.D;
+      break;
+    default:  
+      priorityStyle = styles.D;
+      break;
+  }
+
   return (
+
     <View style={styles.item}>
 
       {/* Left  */}
       <View style={styles.itemLeft}>
-        <View style={styles.square} />
+        <View style={[styles.square, priorityStyle]} />
         <Text style={styles.itemText}> {title} </Text>
       </View>
 
       {/* Right  */}
       <IconButton 
         icon="delete"
-        //color={Colors.red500}
-        size={25}
+        color={Colors.grey600}
+        size={20}
         onPress={() => deleteItem(id)}
         />
+
     </View>
   );
 };
@@ -30,7 +56,7 @@ export const TodoComponent: React.FC<{
 const styles = StyleSheet.create({
   item: {
     backgroundColor: '#FFF',
-    padding: 15,
+    padding: 10,
     borderRadius: 10,
     flexDirection: 'row',
     alignItems: 'center',
@@ -42,22 +68,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexWrap: 'wrap',
   },
+  // Priority styles start
   square: {
     width: 24,
     height: 24,
-    backgroundColor: '#55BCF6',
-    opacity: 0.4,
     borderRadius: 5,
     marginRight: 15,
   },
+  A: {
+    backgroundColor: '#f16a70',
+  },
+  B: {
+    backgroundColor: '#b1d877',
+  },
+  C: {
+    backgroundColor: '#8cdcda',
+  },
+  D: {
+    backgroundColor: '#4d4d4d',
+  },
+  // Priority styles end
   itemText: {
     maxWidth: '80%',
-  },
-  deleteButton: {
-    width: 25,
-    height: 25,
-    borderColor: '#55BCF6',
-    borderWidth: 2,
-    borderRadius: 5,
   },
 });
