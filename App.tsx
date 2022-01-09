@@ -9,7 +9,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
+  Keyboard,
   useColorScheme,
   View,
 } from 'react-native';
@@ -114,6 +114,8 @@ const App = () => {
       await saveTodoItems(db, newTodos);
       setNewTodo('');
 
+      Keyboard.dismiss();
+
     } 
     catch (error) {
       logger.log('ERROR', error);
@@ -182,7 +184,7 @@ const App = () => {
             value={priority}
             items={priorityItems}
             setOpen={setOpen}
-            setValue={setPriority}
+            setValue={setPriority} // Ignore ts error
             setItems={setpriorityItems}
             placeholder={priorityItems[0].label}
             dropDownDirection="TOP"
