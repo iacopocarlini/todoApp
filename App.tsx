@@ -14,9 +14,10 @@ import {
   View,
 } from 'react-native';
 import { TodoComponent } from './components/todoComponent';
-import { TodoModel } from './model/todoModel';
+import { compareTodo, getMinPriority, TodoModel } from './model/todoModel';
 import { getDBConnection, getTodoItems, saveTodoItems, createTable, deleteTodoItem } from './model/db-service';
 import logger from './utils/logger';
+import { constants } from './utils/constants';
 import { IconButton, Colors } from 'react-native-paper';
 import DropDownPicker from 'react-native-dropdown-picker';
 
@@ -28,7 +29,7 @@ const App = () => {
   // State variables
   const [todos, setTodos] = useState<TodoModel[]>([]);
   const [newTodo, setNewTodo] = useState('');
-  const [priority, setPriority] = useState('D');
+  const [priority, setPriority] = useState(getMinPriority());
   const [priorityItems, setpriorityItems] = useState([
     {label: '🔴', value: 'A'},
     {label: '🟢', value: 'B'},
@@ -59,30 +60,7 @@ const App = () => {
     loadDataCallback();
   }, [loadDataCallback]);
 
-  // Sort function for todos
-  const compareTodo = (a: TodoModel, b: TodoModel) => {
-
-    if (a.priority < b.priority)
-      return -1;
-
-    if (a.priority == b.priority) {
-      
-      if (a.id < b.id)
-        return -1;
-
-      if (a.id == b.id)
-        return 0;
-
-      if (a.id > b.id)
-        return 1;
-    }
-
-    if (a.priority > b.priority)
-      return 1;
-
-    return 0;
-  }
-
+  
   const addTodo = async () => {
 
     if (!newTodo.trim()) 
@@ -102,11 +80,9 @@ const App = () => {
         priority: priority
       };
 
-      // Add item and sort on id & pririty
+      // Add item and sort on id & priority
       const newTodos = [...todos, newElement];
       newTodos.sort(compareTodo);
-
-
       setTodos(newTodos);
 
       // Save to DB
@@ -146,7 +122,7 @@ const App = () => {
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       
       <View style={styles.appTitleView}>
-          <Text style={styles.appTitleText}> ToDo </Text>
+          <Text style={styles.appTitleText}> {constants.APP_TITLE} </Text>
         </View>
 
       <View style={styles.mainContainer}>
@@ -196,7 +172,7 @@ const App = () => {
             icon="plus"
             style={styles.addButton}
             color={Colors.grey600}
-            size={20}
+            size={constants.ADD_BUTTON_SIZE}
             onPress={addTodo}
             />  
         </View>      

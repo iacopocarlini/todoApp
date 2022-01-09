@@ -2,6 +2,7 @@
 class LogManager {
 
     static instance: LogManager;
+    active: boolean = true; // switch to turn on/off logging
 
     public constructor() {
 
@@ -14,6 +15,8 @@ class LogManager {
   
     public log(logLevel: String, message:any) {
       
+      if (!this.active) return;
+
       /* Log levels:
         - INFO
         - ERROR 

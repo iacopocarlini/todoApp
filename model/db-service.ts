@@ -1,15 +1,16 @@
 
 import { enablePromise, openDatabase, SQLiteDatabase } from 'react-native-sqlite-storage';
-import { TodoModel } from '../model/todoModel';
+import { getPriorities, TodoModel } from '../model/todoModel';
 import logger from '../utils/logger';
+import { constants } from '../utils/constants';
 
-const tableName = 'todoData';
-const priorities: String[]  = ['A', 'B', 'C', 'D'];
+const tableName = constants.TODO_TABLE_NAME;
+const priorities: String[]  = getPriorities();
 
 enablePromise(true);
 
 export const getDBConnection = async () => {
-  return openDatabase({ name: 'todo-data.db', location: 'default' });
+  return openDatabase({ name: constants.DB_NAME, location: 'default' });
 };
 
 export const createTable = async (db: SQLiteDatabase) => {
@@ -20,7 +21,7 @@ export const createTable = async (db: SQLiteDatabase) => {
                   priority TEXT DEFAULT '${priorities[priorities.length - 1]}'
                   );`;
 
-    logger.log('INFO', query);
+  logger.log('INFO', query);
 
   await db.executeSql(query);
 };

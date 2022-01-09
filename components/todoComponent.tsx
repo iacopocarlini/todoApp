@@ -2,15 +2,14 @@ import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {TodoModel} from '../model/todoModel';
 import { IconButton, Colors } from 'react-native-paper';
+import { constants } from '../utils/constants';
 
 export const TodoComponent: React.FC<{
   todo: TodoModel;
   deleteItem: Function;
 }> = ({todo: {id, title, priority}, deleteItem}) => {
 
-
   // Set style based on priority 
-  // TODO: Refactor
   let priorityStyle; 
   switch (priority) {
 
@@ -45,7 +44,7 @@ export const TodoComponent: React.FC<{
       <IconButton 
         icon="delete"
         color={Colors.grey600}
-        size={20}
+        size={constants.DELETE_BUTTON_SIZE}
         onPress={() => deleteItem(id)}
         />
 
@@ -89,6 +88,6 @@ const styles = StyleSheet.create({
   },
   // Priority styles end
   itemText: {
-    maxWidth: '80%',
+    maxWidth: '70%'
   },
 });
