@@ -147,35 +147,35 @@ const App = () => {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.keyboardAvoidingStyle}>
 
-        <View style={{ flex: 3, paddingHorizontal: 5}} >
-        <TextInput style={styles.input} placeholder={'Write a task'} value={newTodo} onChangeText={text => setNewTodo(text)} />
-        </View>
+          <View style={{ flex: 3, paddingHorizontal: 5}} >
+          <TextInput style={styles.input} placeholder={'Write a task'} value={newTodo} onChangeText={text => setNewTodo(text)} />
+          </View>
 
-        <View style={{ flex: 1, paddingHorizontal: 5}} >
+          <View style={{ flex: 1, paddingHorizontal: 5}} >
 
-          {/* ref: https://hossein-zare.github.io/react-native-dropdown-picker-website/docs/usage */}
-          <DropDownPicker
-            style={styles.priorityDropdown}
-            open={open}
-            value={priority}
-            items={priorityItems}
-            setOpen={setOpen}
-            setValue={setPriority} // Ignore ts error
-            setItems={setpriorityItems}
-            placeholder={priorityItems[0].label}
-            dropDownDirection="TOP"
-          />
-        </View>
+            {/* ref: https://hossein-zare.github.io/react-native-dropdown-picker-website/docs/usage */}
+            <DropDownPicker
+              style={styles.priorityDropdown}
+              open={open}
+              value={priority}
+              items={priorityItems}
+              setOpen={setOpen}
+              setValue={setPriority} // Ignore ts error
+              setItems={setpriorityItems}
+              placeholder={priorityItems[0].label}
+              dropDownDirection="TOP"
+            />
+          </View>
 
-        <View style={{ flex: 1, paddingHorizontal: 5}} > 
-        <IconButton 
-            icon="plus"
-            style={styles.addButton}
-            color={Colors.grey600}
-            size={constants.ADD_BUTTON_SIZE}
-            onPress={addTodo}
-            />  
-        </View>      
+          <View style={{ flex: 1, paddingHorizontal: 5}} > 
+            <IconButton 
+                icon="plus"
+                style={styles.addButton}
+                color={Colors.grey600}
+                size={constants.ADD_BUTTON_SIZE}
+                onPress={addTodo}
+                />  
+          </View>      
         </KeyboardAvoidingView>
         
 
@@ -234,15 +234,6 @@ const styles = StyleSheet.create({
   priorityDropdown: {
     width: '100%',
     borderColor: '#C0C0C0',
-  },
-  addWrapper: {
-    width: '100%',
-    backgroundColor: '#FFF',
-    borderRadius: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderColor: '#C0C0C0',
-    borderWidth: 1,
   },
   addButton: {
     borderColor: '#C0C0C0',

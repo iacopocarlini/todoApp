@@ -1,16 +1,44 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Linking} from 'react-native';
 import {TodoModel} from '../model/todoModel';
 import { IconButton, Colors } from 'react-native-paper';
 import { constants } from '../utils/constants';
+import logger from '../utils/logger';
 
 export const TodoComponent: React.FC<{
   todo: TodoModel;
   deleteItem: Function;
 }> = ({todo: {id, title, priority}, deleteItem}) => {
 
-  // Set style based on priority 
+  // Local variables
+  let linkStyle = {};
   let priorityStyle; 
+
+  // Check if title contains a link
+  let isLink = false;
+  let regex = new RegExp(constants.LINK_PATTERN);
+  if (title.match(regex)) {
+    isLink = true;
+    linkStyle = styles.link;
+  } 
+
+  // Functions
+
+  // if todo text contains a link, it gets opened in the browser
+  const openLink = () => {
+
+    if (!isLink) return;
+   
+    Linking.canOpenURL(title).then(supported => {
+      if (supported) {
+        Linking.openURL(title);
+      } else {
+        logger.log('ERROR', 'Unable to open URL: ' + title);
+      }
+    });
+  }
+
+  // Set style based on priority 
   switch (priority) {
 
     case 'A':
@@ -37,7 +65,7 @@ export const TodoComponent: React.FC<{
       {/* Left  */}
       <View style={styles.itemLeft}>
         <View style={[styles.square, priorityStyle]} />
-        <Text style={styles.itemText}> {title} </Text>
+        <Text style={[styles.itemText, linkStyle]} onPress={openLink}> {title} </Text>
       </View>
 
       {/* Right  */}
@@ -66,6 +94,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
+  },
+  link: {
+    color: constants.LINK_COLOR,
   },
   // Priority styles start
   square: {
