@@ -2,7 +2,7 @@
 class LogManager {
 
     static instance: LogManager;
-    active: boolean = true; // switch to turn on/off logging
+    active: boolean = false; // Switch to turn on/off logging
 
     public constructor() {
 
